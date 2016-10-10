@@ -31,3 +31,12 @@ This is the laundry list of things you can do.
  - [ ] disable device url
  - [ ] move device
  - [ ] Check device status
+
+ # Introduction
+
+ ## Installation
+
+ ```
+ go get github.com/gernest/resingo
+ ```
+
