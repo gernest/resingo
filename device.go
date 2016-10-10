@@ -58,7 +58,7 @@ func DevRegister(ctx *Context, appName, uuid string) (*Device, error) {
 	data["user"] = ctx.Config.UserID()
 	data["device_type"] = app.DeviceType
 	data["application"] = app.ID
-	data["resgistered_at"] = time.Now().Unix()
+	data["registered_at"] = time.Now().Unix()
 	data["uuid"] = uuid
 	data["apikey"] = appKey
 	body, err := marhsalReader(data)

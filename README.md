@@ -3,7 +3,7 @@
 The unofficial golang sdk for resin.io
 
 
-This is the alundry list of things you can do.
+This is the laundry list of things you can do.
 
 - Applications
  - [x] Get all applications
@@ -16,7 +16,7 @@ This is the alundry list of things you can do.
  - [x] Get all devices
  - [ ] Get all devices for a given device name
  - [ ] Get device by UUID
- - [ ] get device by name
+ - [ ] Get device by name
  - [ ] Get device name by UUID
  - [ ] Get application name by device uuid
  - [ ] Check if the device is online or not
