@@ -171,7 +171,8 @@ func AppGetApiKey(ctx *Context, name string) ([]byte, error) {
 		return nil, err
 	}
 	end := fmt.Sprintf("application/%d/generate-api-key", app.ID)
-	uri := ctx.Config.APIEndpoint(end)
+	//uri := ctx.Config.APIEndpoint(end)
+	uri := "https://api.resin.io/" + end
 	fmt.Println(uri)
 	return doJSON(ctx, "POST", uri, h, nil, nil)
 }

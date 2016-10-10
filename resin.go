@@ -104,6 +104,10 @@ func (c *Config) IsValidToken(tok string) bool {
 	return true
 }
 
+func (c *Config) UserID() int64 {
+	return c.tokenClain.UserID
+}
+
 func authHeader(token string) http.Header {
 	h := make(http.Header)
 	h.Add("Authorization", "Bearer "+token)

@@ -58,6 +58,11 @@ func TestApplication(t *testing.T) {
 	t.Run("AppCreate", func(ts *testing.T) {
 		testAppCreate(ctx, ts, "resingo_test", RaspberryPi3)
 	})
+	t.Run("GetApiKey", func(ts *testing.T) {
+		for _, a := range applications {
+			testAppApiKey(ctx, ts, a.name)
+		}
+	})
 }
 
 func testAppGetAll(ctx *Context, t *testing.T) {
@@ -111,4 +116,11 @@ func testAppDelete(ctx *Context, t *testing.T, name string) {
 	if err == nil {
 		t.Error("expected devcice not found error")
 	}
+}
+func testAppApiKey(ctx *Context, t *testing.T, name string) {
+	b, err := AppGetApiKey(ctx, name)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(string(b))
 }
