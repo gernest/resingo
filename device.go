@@ -146,7 +146,7 @@ func DevGetByName(ctx *Context, name string) (*Device, error) {
 		return nil, err
 	}
 	if len(devRes.D) > 0 {
-		fmt.Println(*devRes.D[0])
+		//fmt.Println(*devRes.D[0])
 		return devRes.D[0], nil
 	}
 	return nil, errors.New("device not found")

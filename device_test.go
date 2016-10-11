@@ -58,6 +58,9 @@ func TestDevice(t *testing.T) {
 	t.Run("GetAllByApp", func(ts *testing.T) {
 		testDevGetAllByApp(ctx, ts, appName, maxDevices)
 	})
+	t.Run("GetAll", func(ts *testing.T) {
+		testDevGetAll(ctx, ts, appName, maxDevices)
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {
@@ -65,7 +68,7 @@ func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(dev) != expect {
+	if len(dev) < expect {
 		t.Errorf("expected %d devices got %d ", expect, len(dev))
 	}
 }
