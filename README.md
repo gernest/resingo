@@ -14,7 +14,7 @@ This is the laundry list of things you can do.
  - [x] Generate application API key
 - Devices
  - [x] Get all devices
- - [ ] Get all devices for a given device name
+ - [x] Get all devices for a given device name
  - [x] Get device by UUID
  - [x] Get device by name
  - [ ] Get application name by device uuid
