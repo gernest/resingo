@@ -159,3 +159,28 @@ func DevIsOnline(ctx *Context, uuid string) (bool, error) {
 	}
 	return dev.IsOnline, nil
 }
+
+func DevGetAllByApp(ctx *Context, appName string) ([]*Device, error) {
+	app, err := AppGetByName(ctx, appName)
+	if err != nil {
+		return nil, err
+	}
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint("device")
+	params := make(url.Values)
+	params.Set("filter", "application")
+	params.Set("eq", fmt.Sprint(app.ID))
+	b, err := doJSON(ctx, "GET", uri, h, params, nil)
+	if err != nil {
+		return nil, err
+	}
+	var devRes = struct {
+		D []*Device `json:"d"`
+	}{}
+	//fmt.Println(string(b))
+	err = json.Unmarshal(b, &devRes)
+	if err != nil {
+		return nil, err
+	}
+	return devRes.D, nil
+}

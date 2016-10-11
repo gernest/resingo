@@ -55,6 +55,9 @@ func TestDevice(t *testing.T) {
 			testDevGetByName(ctx, ts, d.dev.Name)
 		}
 	})
+	t.Run("GetAllByApp", func(ts *testing.T) {
+		testDevGetAllByApp(ctx, ts, appName, maxDevices)
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {
@@ -96,5 +99,14 @@ func testDevGetByName(ctx *Context, t *testing.T, name string) {
 	}
 	if dev.Name != name {
 		t.Errorf("expected %s got %s", name, dev.Name)
+	}
+}
+func testDevGetAllByApp(ctx *Context, t *testing.T, appName string, expect int) {
+	dev, err := DevGetAllByApp(ctx, appName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(dev) != expect {
+		t.Errorf("expected %d devies got %d", expect, len(dev))
 	}
 }
