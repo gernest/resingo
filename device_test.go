@@ -45,6 +45,16 @@ func TestDevice(t *testing.T) {
 			testDevRegister(ctx, ts, appName, d.uuid)
 		}
 	})
+	t.Run("GetByUUID", func(ts *testing.T) {
+		for i, d := range devices {
+			devices[i].dev = testDevGetByUUID(ctx, ts, d.uuid)
+		}
+	})
+	t.Run("GetByName", func(ts *testing.T) {
+		for _, d := range devices {
+			testDevGetByName(ctx, ts, d.dev.Name)
+		}
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {
@@ -66,5 +76,25 @@ func testDevRegister(ctx *Context, t *testing.T, appname, uuid string) {
 		if dev.UUID != uuid {
 			t.Error("device uuid mismatch")
 		}
+	}
+}
+
+func testDevGetByUUID(ctx *Context, t *testing.T, uuid string) *Device {
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if dev.UUID != uuid {
+		t.Fatalf("expected %s got %s", uuid, dev.UUID)
+	}
+	return dev
+}
+func testDevGetByName(ctx *Context, t *testing.T, name string) {
+	dev, err := DevGetByName(ctx, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if dev.Name != name {
+		t.Errorf("expected %s got %s", name, dev.Name)
 	}
 }

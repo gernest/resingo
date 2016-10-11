@@ -15,11 +15,10 @@ This is the laundry list of things you can do.
 - Devices
  - [x] Get all devices
  - [ ] Get all devices for a given device name
- - [ ] Get device by UUID
- - [ ] Get device by name
- - [ ] Get device name by UUID
+ - [x] Get device by UUID
+ - [x] Get device by name
  - [ ] Get application name by device uuid
- - [ ] Check if the device is online or not
+ - [x] Check if the device is online or not
  - [ ] Get local IP address of the device
  - [ ] Remove/Delete device
  - [ ] Identify device
