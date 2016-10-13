@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -34,15 +35,17 @@ const (
 	deviceEnvEndpoint      = "/device_environment_variable"
 )
 
-type ApiVersion int
+//APIVersion is the version of resin API
+type APIVersion int
 
+// supported resin API versions
 const (
-	VersionOne ApiVersion = iota
+	VersionOne APIVersion = iota
 	VersionTwo
 	VersionThree
 )
 
-func (v ApiVersion) String() string {
+func (v APIVersion) String() string {
 	switch v {
 	case VersionOne:
 		return "v1"
@@ -54,15 +57,25 @@ func (v ApiVersion) String() string {
 	return ""
 }
 
+//ErrUnkownAuthType error returned when the type of authentication is not
+//supported.
 var ErrUnkownAuthType = errors.New("resingo: unknown authentication type")
+
+//ErrMissingCredentials error returned when either username or password is
+//missing
 var ErrMissingCredentials = errors.New("resingo: missing credentials( username or password)")
+
+//ErrBadToken error returned when the resin session token is bad.
 var ErrBadToken = errors.New("resingo: bad session token")
 
+//HTTPClient is an interface for a http clinet that is used to communicate with
+//the resin API
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 	Post(url string, bodyTyp string, body io.Reader) (*http.Response, error)
 }
 
+//Context holds information necessary to make a call to the resin API
 type Context struct {
 	Client HTTPClient
 	Config *Config
@@ -73,10 +86,10 @@ type Config struct {
 	AuthToken     string
 	Username      string
 	Password      string
-	ApiKey        string
+	APIKey        string
 	tokenClain    *TokenClain
 	ResinEndpoint string
-	ResinVersion  ApiVersion
+	ResinVersion  APIVersion
 }
 
 //TokenClain are the values that are encoded into a session token from resin.io.
@@ -90,20 +103,34 @@ type TokenClain struct {
 	jwt.StandardClaims
 }
 
-func apiURL(base string, version ApiVersion, endpoint string) string {
+// formats a proper url forthe API call. The format is
+// /<base_url>/<api_version>/<api_endpoin. The endpoint can be en empty string.
+//
+//This assumes that the endpoint doesnt start with /
+// TODO: handle endpoint that starts with / and base url that ends with /
+func apiURL(base string, version APIVersion, endpoint string) string {
 	return fmt.Sprintf("%s/%s/%s", base, version, endpoint)
 }
 
-//ApiEndpoint returns a url that points to the given endpoint. This adds the
+//APIEndpoint returns a url that points to the given endpoint. This adds the
 //resin.io api host and version.
 func (c *Config) APIEndpoint(endpoint string) string {
 	return apiURL(c.ResinEndpoint, c.ResinVersion, endpoint)
 }
 
+//IsValidToken return true if the token tok is a valid resin session token.
+//
+// This method ecodes the token. A token that can't be doced is bad token. Any
+// token that has expired is also a bad token.
 func (c *Config) IsValidToken(tok string) bool {
-	return true
+	tk, err := ParseToken(tok)
+	if err != nil {
+		return false
+	}
+	return tk.StandardClaims.ExpiresAt > time.Now().Unix()
 }
 
+//UserID returns the user id.
 func (c *Config) UserID() int64 {
 	return c.tokenClain.UserID
 }
@@ -114,7 +141,7 @@ func authHeader(token string) http.Header {
 	return h
 }
 
-//ParseToken parses and saves the token into the *Config instance.
+//SaveToken saves token, to the current Configuration object.
 func (c *Config) SaveToken(tok string) error {
 	tk, err := ParseToken(tok)
 	if err != nil {
@@ -149,7 +176,8 @@ func Authenticate(ctx *Context, typ AuthType, authToken ...string) (string, erro
 	loginURL := apiEndpoint + "/login_"
 	switch typ {
 	case Credentials:
-		// authenticate using credentials
+		// Absense of either username or password result in missing creadentials
+		// error.
 		if ctx.Config.Username == "" || ctx.Config.Password == "" {
 			return "", ErrMissingCredentials
 		}
@@ -162,7 +190,9 @@ func Authenticate(ctx *Context, typ AuthType, authToken ...string) (string, erro
 		if err != nil {
 			return "", err
 		}
-		defer res.Body.Close()
+		defer func() {
+			_ = res.Body.Close()
+		}()
 		data, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			return "", err
@@ -181,18 +211,31 @@ func Authenticate(ctx *Context, typ AuthType, authToken ...string) (string, erro
 	return "", ErrUnkownAuthType
 }
 
+//Login authenticates the contextand stores the session token. This function
+//checks the validity of the session token before saving it.
+//
+// The call to ctx.IsLoged() should return true if the returned error is nil.
 func Login(ctx *Context, authTyp AuthType, authToken ...string) error {
 	tok, err := Authenticate(ctx, authTyp, authToken...)
 	if err != nil {
 		return err
 	}
 	if ctx.Config.IsValidToken(tok) {
-		ctx.Config.SaveToken(tok)
-		return nil
+		return ctx.Config.SaveToken(tok)
 	}
 	return errors.New("resingo: Failed to login")
 }
 
+//Encode encode properly the request params for use with resin API.
+//
+// Encode tartegts the filter param, which for some reasom(based on OData) is
+// supposed to be $filter and not filter. The value specified by the eq param
+// key is combined with the value from the fileter key to produce the $filter
+// value string.
+//
+// Any other url params are encoded by the default encoder from
+// url.Values.Encoder.
+//TODO: check a better way to encode OData url params.
 func Encode(q url.Values) string {
 	if q == nil {
 		return ""

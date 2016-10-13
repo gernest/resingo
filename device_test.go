@@ -61,6 +61,9 @@ func TestDevice(t *testing.T) {
 	t.Run("GetAll", func(ts *testing.T) {
 		testDevGetAll(ctx, ts, appName, maxDevices)
 	})
+	t.Run("Rename", func(ts *testing.T) {
+		testDevRename(ctx, ts, "avocado", devices[0].uuid)
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {
@@ -111,5 +114,19 @@ func testDevGetAllByApp(ctx *Context, t *testing.T, appName string, expect int) 
 	}
 	if len(dev) != expect {
 		t.Errorf("expected %d devies got %d", expect, len(dev))
+	}
+}
+
+func testDevRename(ctx *Context, t *testing.T, newName string, uuid string) {
+	err := DevRename(ctx, uuid, newName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if dev.Name != newName {
+		t.Errorf("expected %s got %s", newName, dev.Name)
 	}
 }

@@ -30,9 +30,10 @@ func TestApplication(t *testing.T) {
 		{"algorithm_zero", nil, RaspberryPi2},
 	}
 	for i, a := range applications {
+		_, _ = AppDelete(ctx, a.name)
 		app, err := AppCreate(ctx, a.name, a.typ)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
 		applications[i].app = app
 	}
@@ -60,7 +61,7 @@ func TestApplication(t *testing.T) {
 	})
 	t.Run("GetApiKey", func(ts *testing.T) {
 		for _, a := range applications {
-			testAppApiKey(ctx, ts, a.name)
+			testAppAPIKey(ctx, ts, a.name)
 		}
 	})
 }
@@ -90,7 +91,7 @@ func testApGetByID(ctx *Context, t *testing.T, id int64) {
 		t.Fatal(err)
 	}
 	if app.ID != id {
-		t.Errorf("expected %s got %s", id, app.ID)
+		t.Errorf("expected %d got %d", id, app.ID)
 	}
 }
 
@@ -117,8 +118,8 @@ func testAppDelete(ctx *Context, t *testing.T, name string) {
 		t.Error("expected devcice not found error")
 	}
 }
-func testAppApiKey(ctx *Context, t *testing.T, name string) {
-	b, err := AppGetApiKey(ctx, name)
+func testAppAPIKey(ctx *Context, t *testing.T, name string) {
+	b, err := AppGetAPIKey(ctx, name)
 	if err != nil {
 		t.Error(err)
 	}

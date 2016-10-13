@@ -19,16 +19,16 @@ This is the laundry list of things you can do.
  - [x] Get device by name
  - [ ] Get application name by device uuid
  - [x] Check if the device is online or not
- - [ ] Get local IP address of the device
+ - [x] Get local IP address of the device
  - [ ] Remove/Delete device
  - [ ] Identify device
- - [ ] Rename application
+ - [x] Rename device
  - [ ] Note a device
  - [x] Generate device UUID
  - [x] Register device
- - [ ] enable device url
- - [ ] disable device url
- - [ ] move device
+ - [ ] Enable device url
+ - [ ] Disable device url
+ - [ ] Move device
  - [ ] Check device status
 
  # Introduction

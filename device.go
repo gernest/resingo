@@ -12,6 +12,7 @@ import (
 	"github.com/guregu/null"
 )
 
+//Device represent the information about a resin device
 type Device struct {
 	ID            int64  `json:"id"`
 	Name          string `json:"name"`
@@ -27,20 +28,22 @@ type Device struct {
 	User                  User      `json:"user"`
 	Actor                 int64     `json:"actor"`
 	IsOnline              bool      `json:"is_online"`
-	Commit                string    `json:'commit'`
-	Status                string    `json:'status'`
+	Commit                string    `json:"commit"`
+	Status                string    `json:"status"`
 	LastConnectivityEvent null.Time `json:"last_connectivity_event"`
 	IP                    string    `json:"ip_address"`
 	VPNAddr               string    `json:"vpn_address"`
 	PublicAddr            string    `json:"public_address"`
 	SuprevisorVersion     string    `json:"supervisor_version"`
-	Note                  string    `json:'note'`
+	Note                  string    `json:"note"`
 	OsVersion             string    `json:"os_version"`
-	Location              string    `json:location`
+	Location              string    `json:"location"`
 	Longitude             string    `json:"longitude"`
 	Latitude              string    `json:"latitude"`
 }
 
+//DevGetAll returns all devices that belong to the user who authorized the
+//context ctx.
 func DevGetAll(ctx *Context) ([]*Device, error) {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint("device")
@@ -58,6 +61,7 @@ func DevGetAll(ctx *Context) ([]*Device, error) {
 	return devRes.D, nil
 }
 
+//GenerateUUID generates uuid suitable for resin devices
 func GenerateUUID() (string, error) {
 	src := make([]byte, 31)
 	_, err := rand.Read(src)
@@ -67,12 +71,14 @@ func GenerateUUID() (string, error) {
 	return hex.EncodeToString(src), nil
 }
 
+//DevRegister registers the device with uuid to the the application with name
+//appName.
 func DevRegister(ctx *Context, appName, uuid string) (*Device, error) {
 	app, err := AppGetByName(ctx, appName)
 	if err != nil {
 		return nil, err
 	}
-	appKey, err := AppGetApiKey(ctx, appName)
+	appKey, err := AppGetAPIKey(ctx, appName)
 	if err != nil {
 		return nil, err
 	}
@@ -103,6 +109,7 @@ func DevRegister(ctx *Context, appName, uuid string) (*Device, error) {
 
 }
 
+//DevGetByUUID returns the device with the given uuid.
 func DevGetByUUID(ctx *Context, uuid string) (*Device, error) {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint("device")
@@ -127,6 +134,7 @@ func DevGetByUUID(ctx *Context, uuid string) (*Device, error) {
 	return nil, errors.New("device not found")
 }
 
+//DevGetByName returns the device with the given name
 func DevGetByName(ctx *Context, name string) (*Device, error) {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint("device")
@@ -152,6 +160,8 @@ func DevGetByName(ctx *Context, name string) (*Device, error) {
 	return nil, errors.New("device not found")
 }
 
+//DevIsOnline return true if the device with uuid is online and false otherwise.
+//Any errors encountered is returned too.
 func DevIsOnline(ctx *Context, uuid string) (bool, error) {
 	dev, err := DevGetByUUID(ctx, uuid)
 	if err != nil {
@@ -160,6 +170,8 @@ func DevIsOnline(ctx *Context, uuid string) (bool, error) {
 	return dev.IsOnline, nil
 }
 
+//DevGetAllByApp returns all devices that are registered to the application with
+//the given appName.
 func DevGetAllByApp(ctx *Context, appName string) ([]*Device, error) {
 	app, err := AppGetByName(ctx, appName)
 	if err != nil {
@@ -183,4 +195,30 @@ func DevGetAllByApp(ctx *Context, appName string) ([]*Device, error) {
 		return nil, err
 	}
 	return devRes.D, nil
+}
+
+func DevRename(ctx *Context, uuid, newName string) error {
+	_, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		return err
+	}
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint("device")
+	params := make(url.Values)
+	params.Set("filter", "uuid")
+	params.Set("eq", uuid)
+	data := make(map[string]interface{})
+	data["name"] = newName
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "PATCH", uri, h, params, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
 }
