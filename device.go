@@ -197,6 +197,7 @@ func DevGetAllByApp(ctx *Context, appName string) ([]*Device, error) {
 	return devRes.D, nil
 }
 
+//DevRename renames the divice with uuid to nwName
 func DevRename(ctx *Context, uuid, newName string) error {
 	_, err := DevGetByUUID(ctx, uuid)
 	if err != nil {
