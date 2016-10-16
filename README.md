@@ -62,7 +62,7 @@ This is the laundry list of things you can do.
  - [ ] Remove ssh key
  - [ ] Create ssh key
 
- - Os
+- Os
   - [ ] Download Os Image
 
  # Introduction
