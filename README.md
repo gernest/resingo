@@ -44,6 +44,27 @@ This is the laundry list of things you can do.
  - [ ] Move device
  - [ ] Check device status
 
+- Environment
+ - Device
+  - [ ] Get all device environment variables
+  - [ ] Create a device environment variable
+  - [ ] Update device environment variable
+  - [ ] Remove device environment variable
+ - Application
+  - [ ] Get all application environment variables
+  - [ ] Create application environment variable
+  - [ ] Update application environment variable
+  - [ ] Remove application environment variable
+
+- Keys
+ - [ ] Get all ssh keys
+ - [ ] Get a dingle ssh key
+ - [ ] Remove ssh key
+ - [ ] Create ssh key
+
+ - Os
+  - [ ] Download Os Image
+
  # Introduction
 
  ## Installation
