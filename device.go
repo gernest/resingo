@@ -12,6 +12,16 @@ import (
 	"github.com/guregu/null"
 )
 
+//ErrDeviceNotFound is returned when there is  no device returned from an API call
+//for devices.
+//
+// We assume that, a valid API call will alwayss return with valid results, so
+// lack of any matching devices means we didn't find anything.
+//
+// NOTE: This should have been handled by resin api. Probably with status codes
+// and the response body indicating nothing was dound.
+var ErrDeviceNotFound = errors.New("resingo: device not found")
+
 //Device represent the information about a resin device
 type Device struct {
 	ID            int64  `json:"id"`
@@ -131,7 +141,7 @@ func DevGetByUUID(ctx *Context, uuid string) (*Device, error) {
 	if len(devRes.D) > 0 {
 		return devRes.D[0], nil
 	}
-	return nil, errors.New("device not found")
+	return nil, ErrDeviceNotFound
 }
 
 //DevGetByName returns the device with the given name
@@ -157,7 +167,7 @@ func DevGetByName(ctx *Context, name string) (*Device, error) {
 		//fmt.Println(*devRes.D[0])
 		return devRes.D[0], nil
 	}
-	return nil, errors.New("device not found")
+	return nil, ErrDeviceNotFound
 }
 
 //DevIsOnline return true if the device with uuid is online and false otherwise.
