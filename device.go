@@ -223,3 +223,24 @@ func DevRename(ctx *Context, uuid, newName string) error {
 	}
 	return nil
 }
+
+//DevGetApp returns the application in which the device belongs to. This
+//function is convenient only when you are interested on other information about
+//the application.
+//
+// If your intention is only to retrieve the applicayion id, then just use this
+// instead.
+//
+//	dev,err:=DevGetByUUID(ctx,<uuid goes here>)
+//	if err!=nil{
+//		//handle error error
+//	}
+//	// you can now access the application id like this
+//	fmt.Println(dev.Application.ID
+func DevGetApp(ctx *Context, uuid string) (*Application, error) {
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+	return AppGetByID(ctx, dev.Application.ID)
+}
