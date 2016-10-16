@@ -106,7 +106,7 @@ type TokenClain struct {
 // formats a proper url forthe API call. The format is
 // /<base_url>/<api_version>/<api_endpoin. The endpoint can be en empty string.
 //
-//This assumes that the endpoint doesnt start with /
+//This assumes that the endpoint doesn't start with /
 // TODO: handle endpoint that starts with / and base url that ends with /
 func apiURL(base string, version APIVersion, endpoint string) string {
 	return fmt.Sprintf("%s/%s/%s", base, version, endpoint)
@@ -170,13 +170,13 @@ func ParseToken(tok string) (*TokenClain, error) {
 }
 
 //Authenticate authenticates the client and returns the Auth token. See Login if
-//you want to save the token in the client. This function doens not save the
+//you want to save the token in the client. This function does not save the
 //authentication token and user detals.
 func Authenticate(ctx *Context, typ AuthType, authToken ...string) (string, error) {
 	loginURL := apiEndpoint + "/login_"
 	switch typ {
 	case Credentials:
-		// Absense of either username or password result in missing creadentials
+		// Absence of either username or password result in missing creadentials
 		// error.
 		if ctx.Config.Username == "" || ctx.Config.Password == "" {
 			return "", ErrMissingCredentials

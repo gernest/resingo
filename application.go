@@ -11,7 +11,7 @@ import (
 	"net/url"
 )
 
-//Application  holtd infomation about the application that is running on resin.
+//Application  holds  information about the application that is running on resin.
 type Application struct {
 	ID         int64  `json:"id"`
 	Name       string `json:"app_name"`
