@@ -55,7 +55,7 @@ This is the laundry list of things you can do.
 ## Design philosophy
 
 #### Naming convention
-The library covers different componets of the resin serive namely  `device`,
+The library covers different componets of the resin service namely  `device`,
 `application`, `os` ,`environment` and `keys`.
 
 Due to the nature of this lirary to use functions rather than attach methods to
@@ -65,7 +65,7 @@ component.
 
 The following is the Prefix table that shows all the prefix used to name the
 functions. For example `DevGetAll` is a function that retrives all devices and
-`AppGetAll` is a function that retrieves a;; App;ications.
+`AppGetAll` is a function that retrieves all App;ications.
 
 component   | function prefix
 ------------|----------------
