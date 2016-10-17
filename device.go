@@ -26,7 +26,7 @@ var ErrDeviceNotFound = errors.New("resingo: device not found")
 type Device struct {
 	ID            int64  `json:"id"`
 	Name          string `json:"name"`
-	WebAccessible bool   `json:"is-web_accessible"`
+	WebAccessible bool   `json:"is_web_accessible"`
 	Type          string `json:"device_type"`
 	Application   struct {
 		ID       int64 `json:"__id"`
@@ -253,4 +253,58 @@ func DevGetApp(ctx *Context, uuid string) (*Application, error) {
 		return nil, err
 	}
 	return AppGetByID(ctx, dev.Application.ID)
+}
+
+//DevEnableURL enables the device url. This allows the device to be accessed
+//anywhere using the url which uses resin vpn.
+//
+// NOTE: It is awskward to retrurn OK rather than the url which was enabled.
+func DevEnableURL(ctx *Context, uuid string) error {
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		return err
+	}
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", dev.ID))
+	params := make(url.Values)
+	params.Set("filter", "uuid")
+	params.Set("eq", uuid)
+	data := make(map[string]interface{})
+	data["is_web_accessible"] = true
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "PATCH", uri, h, params, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
+}
+
+//DevDisableURL diables the deice url, making it not accessible via the web.
+func DevDisableURL(ctx *Context, uuid string) error {
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		return err
+	}
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", dev.ID))
+	data := make(map[string]interface{})
+	data["is_web_accessible"] = false
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "PATCH", uri, h, nil, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
 }

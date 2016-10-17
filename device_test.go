@@ -2,6 +2,7 @@ package resingo
 
 import (
 	"net/http"
+	"os"
 	"testing"
 )
 
@@ -66,6 +67,20 @@ func TestDevice(t *testing.T) {
 	})
 	t.Run("GetApp", func(ts *testing.T) {
 		testDevGetApp(ctx, ts, devices[0].uuid, appName)
+	})
+	t.Run("EnableURL", func(ts *testing.T) {
+		uuid := os.Getenv("RESINTEST_REALDEVICE_UUID")
+		if uuid == "" {
+			ts.Skip("missing RESINTEST_REALDEVICE_UUID")
+		}
+		testDevEnableURL(ctx, ts, devices[0].uuid)
+	})
+	t.Run("DisableURL", func(ts *testing.T) {
+		uuid := os.Getenv("RESINTEST_REALDEVICE_UUID")
+		if uuid == "" {
+			ts.Skip("missing RESINTEST_REALDEVICE_UUID")
+		}
+		testDevDisableURL(ctx, ts, devices[0].uuid)
 	})
 }
 
@@ -143,4 +158,31 @@ func testDevGetApp(ctx *Context, t *testing.T, uuid, appName string) {
 		t.Errorf("expected %s got %s", appName, app.Name)
 	}
 
+}
+
+func testDevEnableURL(ctx *Context, t *testing.T, uuid string) {
+	err := DevEnableURL(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !dev.WebAccessible {
+		t.Error("the device should be web accessible")
+	}
+}
+func testDevDisableURL(ctx *Context, t *testing.T, uuid string) {
+	err := DevDisableURL(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	dev, err := DevGetByUUID(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if dev.WebAccessible {
+		t.Error("the device should not be web accessible")
+	}
 }
