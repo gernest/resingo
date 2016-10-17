@@ -30,7 +30,6 @@ func TestApplication(t *testing.T) {
 		{"algorithm_zero", nil, RaspberryPi2},
 	}
 	for i, a := range applications {
-		_, _ = AppDelete(ctx, a.name)
 		app, err := AppCreate(ctx, a.name, a.typ)
 		if err != nil {
 			t.Fatal(err)
@@ -39,7 +38,7 @@ func TestApplication(t *testing.T) {
 	}
 	defer func() {
 		for _, a := range applications {
-			_, _ = AppDelete(ctx, a.name)
+			_, _ = AppDelete(ctx, a.app.ID)
 		}
 	}()
 
@@ -104,16 +103,16 @@ func testAppCreate(ctx *Context, t *testing.T, name string, typ DeviceType) {
 		t.Fatalf("expected %s got %s", name, app.Name)
 	}
 	t.Run("Delete", func(ts *testing.T) {
-		testAppDelete(ctx, ts, name)
+		testAppDelete(ctx, ts, app.ID)
 	})
 }
 
-func testAppDelete(ctx *Context, t *testing.T, name string) {
-	_, err := AppDelete(ctx, name)
+func testAppDelete(ctx *Context, t *testing.T, id int64) {
+	_, err := AppDelete(ctx, id)
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = AppGetByName(ctx, name)
+	_, err = AppGetByID(ctx, id)
 	if err == nil {
 		t.Error("expected devcice not found error")
 	}

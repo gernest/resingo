@@ -181,17 +181,12 @@ func DevIsOnline(ctx *Context, uuid string) (bool, error) {
 }
 
 //DevGetAllByApp returns all devices that are registered to the application with
-//the given appName.
-func DevGetAllByApp(ctx *Context, appName string) ([]*Device, error) {
-	app, err := AppGetByName(ctx, appName)
-	if err != nil {
-		return nil, err
-	}
+//the given appID
+func DevGetAllByApp(ctx *Context, appID int64) ([]*Device, error) {
 	h := authHeader(ctx.Config.AuthToken)
-	uri := ctx.Config.APIEndpoint("device")
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("application(%d)", appID))
 	params := make(url.Values)
-	params.Set("filter", "application")
-	params.Set("eq", fmt.Sprint(app.ID))
+	params.Set("$expand", "device")
 	b, err := doJSON(ctx, "GET", uri, h, params, nil)
 	if err != nil {
 		return nil, err

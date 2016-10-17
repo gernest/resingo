@@ -121,11 +121,8 @@ func doJSON(ctx *Context, method, uri string, header http.Header,
 //AppGetByID returns application with the given id
 func AppGetByID(ctx *Context, id int64) (*Application, error) {
 	h := authHeader(ctx.Config.AuthToken)
-	uri := ctx.Config.APIEndpoint("application")
-	params := make(url.Values)
-	params.Set("filter", "id")
-	params.Set("eq", fmt.Sprint(id))
-	b, err := doJSON(ctx, "GET", uri, h, params, nil)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("application(%d)", id))
+	b, err := doJSON(ctx, "GET", uri, h, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -173,14 +170,11 @@ func marhsalReader(o interface{}) (io.Reader, error) {
 	return bytes.NewReader(b), nil
 }
 
-//AppDelete removes the application with the given name
-func AppDelete(ctx *Context, name string) (bool, error) {
+//AppDelete removes the application with the given id
+func AppDelete(ctx *Context, id int64) (bool, error) {
 	h := authHeader(ctx.Config.AuthToken)
-	uri := ctx.Config.APIEndpoint("application")
-	params := make(url.Values)
-	params.Set("filter", "app_name")
-	params.Set("eq", name)
-	b, err := doJSON(ctx, "DELETE", uri, h, params, nil)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("application(%d)", id))
+	b, err := doJSON(ctx, "DELETE", uri, h, nil, nil)
 	if err != nil {
 		return false, err
 	}

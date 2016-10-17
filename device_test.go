@@ -27,7 +27,7 @@ func TestDevice(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() {
-		_, _ = AppDelete(ctx, app.Name)
+		_, _ = AppDelete(ctx, app.ID)
 	}()
 	maxDevices := 4
 	devices := make([]struct {
@@ -57,7 +57,7 @@ func TestDevice(t *testing.T) {
 		}
 	})
 	t.Run("GetAllByApp", func(ts *testing.T) {
-		testDevGetAllByApp(ctx, ts, appName, maxDevices)
+		testDevGetAllByApp(ctx, ts, app.ID, maxDevices)
 	})
 	t.Run("GetAll", func(ts *testing.T) {
 		testDevGetAll(ctx, ts, appName, maxDevices)
@@ -125,8 +125,8 @@ func testDevGetByName(ctx *Context, t *testing.T, name string) {
 		t.Errorf("expected %s got %s", name, dev.Name)
 	}
 }
-func testDevGetAllByApp(ctx *Context, t *testing.T, appName string, expect int) {
-	dev, err := DevGetAllByApp(ctx, appName)
+func testDevGetAllByApp(ctx *Context, t *testing.T, appID int64, expect int) {
+	dev, err := DevGetAllByApp(ctx, appID)
 	if err != nil {
 		t.Fatal(err)
 	}
