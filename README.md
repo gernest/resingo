@@ -41,7 +41,7 @@ This is the laundry list of things you can do.
  - [x] Register device
  - [x] Enable device url
  - [x] Disable device url
- - [ ] Move device
+ - [x] Move device
  - [x] Check device status
 
 - Environment
