@@ -326,6 +326,7 @@ func DevDelete(ctx *Context, id int64) error {
 	return nil
 }
 
+//DevNote add note to the device
 func DevNote(ctx *Context, id int64, note string) error {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", id))
@@ -345,6 +346,7 @@ func DevNote(ctx *Context, id int64, note string) error {
 	return nil
 }
 
+//DevMove moves the device to a different application
 func DevMove(ctx *Context, id int64, appID int64) error {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", id))

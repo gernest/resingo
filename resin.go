@@ -251,34 +251,34 @@ func Encode(q url.Values) string {
 		switch k {
 		case "filter":
 			if buf.Len() != 0 {
-				buf.WriteRune('&')
+				_, _ = buf.WriteRune('&')
 			}
 			v := q.Get("filter")
-			buf.WriteString("$filter=" + v)
+			_, _ = buf.WriteString("$filter=" + v)
 			for _, fk := range keys {
 				switch fk {
 				case "eq":
 					fv := "%20" + fk + "%20" + quote(q.Get(fk))
-					buf.WriteString(fv)
+					_, _ = buf.WriteString(fv)
 					q.Del(fk)
 				}
 			}
 			q.Del(k)
 		case "expand":
 			if buf.Len() != 0 {
-				buf.WriteRune('&')
+				_, _ = buf.WriteRune('&')
 			}
 			v := q.Get("expand")
-			buf.WriteString("$expand=" + v)
+			_, _ = buf.WriteString("$expand=" + v)
 			q.Del(k)
 		}
 	}
 	e := q.Encode()
 	if e != "" {
 		if buf.Len() != 0 {
-			buf.WriteRune('&')
+			_, _ = buf.WriteRune('&')
 		}
-		buf.WriteString(e)
+		_, _ = buf.WriteString(e)
 	}
 	return buf.String()
 }
