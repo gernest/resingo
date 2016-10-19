@@ -186,20 +186,28 @@ func DevGetAllByApp(ctx *Context, appID int64) ([]*Device, error) {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint(fmt.Sprintf("application(%d)", appID))
 	params := make(url.Values)
-	params.Set("$expand", "device")
+	params.Set("expand", "device")
 	b, err := doJSON(ctx, "GET", uri, h, params, nil)
 	if err != nil {
 		return nil, err
 	}
+	//var devRes = struct {
+	//D []*Device `json:"d"`
+	//}{}
 	var devRes = struct {
-		D []*Device `json:"d"`
+		D []struct {
+			Device []*Device `json:"device"`
+		} `json:"d"`
 	}{}
 	//fmt.Println(string(b))
 	err = json.Unmarshal(b, &devRes)
 	if err != nil {
 		return nil, err
 	}
-	return devRes.D, nil
+	if len(devRes.D) > 0 {
+		return devRes.D[0].Device, nil
+	}
+	return nil, ErrDeviceNotFound
 }
 
 //DevRename renames the device with uuid to nwName
@@ -211,7 +219,7 @@ func DevRename(ctx *Context, uuid, newName string) error {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint("device")
 	params := make(url.Values)
-	params.Set("filter", "uuid")
+	params.Set("Filter", "uuid")
 	params.Set("eq", uuid)
 	data := make(map[string]interface{})
 	data["name"] = newName
@@ -290,6 +298,58 @@ func DevDisableURL(ctx *Context, uuid string) error {
 	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", dev.ID))
 	data := make(map[string]interface{})
 	data["is_web_accessible"] = false
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "PATCH", uri, h, nil, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
+}
+
+//DevDelete deletes the device with the given id
+func DevDelete(ctx *Context, id int64) error {
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", id))
+	b, err := doJSON(ctx, "DELETE", uri, h, nil, nil)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
+}
+
+func DevNote(ctx *Context, id int64, note string) error {
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", id))
+	data := make(map[string]interface{})
+	data["note"] = note
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "PATCH", uri, h, nil, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
+}
+
+func DevMove(ctx *Context, id int64, appID int64) error {
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint(fmt.Sprintf("device(%d)", id))
+	data := make(map[string]interface{})
+	data["application"] = appID
 	body, err := marhsalReader(data)
 	if err != nil {
 		return err

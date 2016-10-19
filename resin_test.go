@@ -2,7 +2,9 @@ package resingo
 
 import (
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -76,5 +78,27 @@ func testLogin(ctx *Context, t *testing.T) {
 	}
 	if ctx.Config.tokenClain == nil {
 		t.Error("expected the token to be saved")
+	}
+}
+
+func TestEncode(t *testing.T) {
+	sample := []struct {
+		params []string
+		expect string
+	}{
+		{[]string{"filter,Name", "eq,Milk"}, "$filter=Name%20eq%20'Milk'"},
+		{[]string{"expand,device"}, "$expand=device"},
+	}
+
+	for _, v := range sample {
+		param := make(url.Values)
+		for _, p := range v.params {
+			s := strings.Split(p, ",")
+			param.Set(s[0], s[1])
+		}
+		e := Encode(param)
+		if e != v.expect {
+			t.Errorf("expectes %s got %s", v.expect, e)
+		}
 	}
 }

@@ -1,12 +1,14 @@
 package resingo
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -240,16 +242,59 @@ func Encode(q url.Values) string {
 	if q == nil {
 		return ""
 	}
-	if filter := q.Get("filter"); filter != "" {
-		eq := q.Get("eq")
-		f := "$filter=" + filter + "%20eq%20" + fmt.Sprintf("'%s'", eq)
-		q.Del("eq")
-		q.Del("filter")
-		s := q.Encode()
-		if s != "" {
-			return fmt.Sprintf("%s&%s", f, s)
-		}
-		return f
+	var buf bytes.Buffer
+	var keys []string
+	for k := range q {
+		keys = append(keys, k)
 	}
-	return q.Encode()
+	for _, k := range keys {
+		switch k {
+		case "filter":
+			if buf.Len() != 0 {
+				buf.WriteRune('&')
+			}
+			v := q.Get("filter")
+			buf.WriteString("$filter=" + v)
+			for _, fk := range keys {
+				switch fk {
+				case "eq":
+					fv := "%20" + fk + "%20" + quote(q.Get(fk))
+					buf.WriteString(fv)
+					q.Del(fk)
+				}
+			}
+			q.Del(k)
+		case "expand":
+			if buf.Len() != 0 {
+				buf.WriteRune('&')
+			}
+			v := q.Get("expand")
+			buf.WriteString("$expand=" + v)
+			q.Del(k)
+		}
+	}
+	e := q.Encode()
+	if e != "" {
+		if buf.Len() != 0 {
+			buf.WriteRune('&')
+		}
+		buf.WriteString(e)
+	}
+	return buf.String()
+}
+
+func quote(v string) string {
+	ok, _ := strconv.ParseBool(v)
+	if ok {
+		return v
+	}
+	_, err := strconv.Atoi(v)
+	if err == nil {
+		return v
+	}
+	_, err = strconv.ParseFloat(v, 64)
+	if err == nil {
+		return v
+	}
+	return "'" + v + "'"
 }

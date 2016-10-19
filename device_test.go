@@ -82,6 +82,28 @@ func TestDevice(t *testing.T) {
 		}
 		testDevDisableURL(ctx, ts, devices[0].uuid)
 	})
+	t.Run("Delete", func(ts *testing.T) {
+		u, _ := GenerateUUID()
+		d, err := DevRegister(ctx, appName, u)
+		if err != nil {
+			ts.Fatal(err)
+		}
+		err = DevDelete(ctx, d.ID)
+		if err != nil {
+			ts.Fatal(err)
+		}
+		_, err = DevGetByUUID(ctx, u)
+		if err != ErrDeviceNotFound {
+			t.Errorf("expected %s got %s", ErrDeviceNotFound.Error(), err.Error())
+		}
+	})
+	t.Run("Note", func(ts *testing.T) {
+		note := "hello,world"
+		err := DevNote(ctx, devices[0].dev.ID, note)
+		if err != nil {
+			ts.Fatal(err)
+		}
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {

@@ -33,16 +33,16 @@ This is the laundry list of things you can do.
  - [x] Get application name by device uuid
  - [x] Check if the device is online or not
  - [x] Get local IP address of the device
- - [ ] Remove/Delete device
+ - [x] Remove/Delete device
  - [ ] Identify device
  - [x] Rename device
- - [ ] Note a device
+ - [x] Note a device
  - [x] Generate device UUID
  - [x] Register device
- - [ ] Enable device url
- - [ ] Disable device url
+ - [x] Enable device url
+ - [x] Disable device url
  - [ ] Move device
- - [ ] Check device status
+ - [x] Check device status
 
 - Environment
  - Device
