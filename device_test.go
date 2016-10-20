@@ -104,6 +104,25 @@ func TestDevice(t *testing.T) {
 			ts.Fatal(err)
 		}
 	})
+	env := []struct {
+		key, value string
+	}{
+		{"Mad", "Scientist"},
+		{"MONIKER", "IOT"},
+	}
+	t.Run("CreateEnv", func(ts *testing.T) {
+		for _, v := range devices {
+			for _, e := range env {
+				env, err := EnvDevCreate(ctx, v.dev.ID, e.key, e.value)
+				if err != nil {
+					ts.Error(err)
+				}
+				if env.Name != e.key {
+					t.Errorf("expected %s got %s", e.key, env.Name)
+				}
+			}
+		}
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {
