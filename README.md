@@ -162,3 +162,31 @@ func main() {
 }
 ```
 
+
+
+# Contributing
+
+This requires go1.7+
+
+Running tests will require a valid resin account . You need to set the following
+environment variables before running the `make` command.
+
+```bash
+export RESINTEST_EMAI=
+export RESINTEST_PASSWORD=
+export RESINTEST_USERNAME=
+export RESINTEST_REALDEVICE_UUID=
+```
+
+The names are self explanatory. To avoid typing them all the time, you can write
+them into a a file named `.env` which stays at the root of this project, the test
+script will automatically source it for you.
+
+All contributions are welcome.
+
+# Author
+
+twitter [@gernesti](https://twitter.com/gernesti)
+
+# Licence
+MIT
