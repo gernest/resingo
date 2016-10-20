@@ -1,6 +1,10 @@
 package resingo
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+	"net/url"
+)
 
 //Env contains the response for device environment variable
 type Env struct {
@@ -41,4 +45,24 @@ func EnvDevCreate(ctx *Context, id int64, key, value string) (*Env, error) {
 		return nil, err
 	}
 	return e, nil
+}
+
+func EnvDevGetAll(ctx *Context, id int64) ([]*Env, error) {
+	h := authHeader(ctx.Config.AuthToken)
+	uri := ctx.Config.APIEndpoint("device_environment_variable")
+	param := make(url.Values)
+	param.Set("filter", "device")
+	param.Set("eq", fmt.Sprint(id))
+	b, err := doJSON(ctx, "GET", uri, h, param, nil)
+	if err != nil {
+		return nil, err
+	}
+	res := struct {
+		D []*Env `json:"d"`
+	}{}
+	err = json.Unmarshal(b, &res)
+	if err != nil {
+		return nil, err
+	}
+	return res.D, nil
 }

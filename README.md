@@ -46,8 +46,8 @@ This is the laundry list of things you can do.
 
 - Environment
  - Device
-  - [ ] Get all device environment variables
-  - [ ] Create a device environment variable
+  - [x] Get all device environment variables
+  - [x] Create a device environment variable
   - [ ] Update device environment variable
   - [ ] Remove device environment variable
  - Application

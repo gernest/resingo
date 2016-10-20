@@ -113,13 +113,24 @@ func TestDevice(t *testing.T) {
 	t.Run("CreateEnv", func(ts *testing.T) {
 		for _, v := range devices {
 			for _, e := range env {
-				env, err := EnvDevCreate(ctx, v.dev.ID, e.key, e.value)
+				en, err := EnvDevCreate(ctx, v.dev.ID, e.key, e.value)
 				if err != nil {
 					ts.Error(err)
 				}
-				if env.Name != e.key {
-					t.Errorf("expected %s got %s", e.key, env.Name)
+				if en.Name != e.key {
+					t.Errorf("expected %s got %s", e.key, en.Name)
 				}
+			}
+		}
+	})
+	t.Run("EnvGetAll", func(ts *testing.T) {
+		for _, v := range devices {
+			envs, err := EnvDevGetAll(ctx, v.dev.ID)
+			if err != nil {
+				ts.Error(err)
+			}
+			if len(envs) != len(env) {
+				t.Errorf("expected %d got %d", len(env), len(envs))
 			}
 		}
 	})
