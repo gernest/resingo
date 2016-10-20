@@ -47,6 +47,7 @@ func EnvDevCreate(ctx *Context, id int64, key, value string) (*Env, error) {
 	return e, nil
 }
 
+//EnvDevGetAll get all environment variables for the device
 func EnvDevGetAll(ctx *Context, id int64) ([]*Env, error) {
 	h := authHeader(ctx.Config.AuthToken)
 	uri := ctx.Config.APIEndpoint("device_environment_variable")
