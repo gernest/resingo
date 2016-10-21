@@ -132,6 +132,15 @@ func (c *Config) IsValidToken(tok string) bool {
 	return tk.StandardClaims.ExpiresAt > time.Now().Unix()
 }
 
+//ValidToken return true if tok is avalid token
+func ValidToken(tok string) bool {
+	tk, err := ParseToken(tok)
+	if err != nil {
+		return false
+	}
+	return tk.StandardClaims.ExpiresAt > time.Now().Unix()
+}
+
 //UserID returns the user id.
 func (c *Config) UserID() int64 {
 	return c.tokenClain.UserID
