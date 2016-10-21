@@ -94,7 +94,7 @@ func TestDevice(t *testing.T) {
 		}
 		_, err = DevGetByUUID(ctx, u)
 		if err != ErrDeviceNotFound {
-			t.Errorf("expected %s got %s", ErrDeviceNotFound.Error(), err.Error())
+			ts.Errorf("expected %s got %s", ErrDeviceNotFound.Error(), err.Error())
 		}
 	})
 	t.Run("Note", func(ts *testing.T) {
@@ -118,7 +118,7 @@ func TestDevice(t *testing.T) {
 					ts.Error(err)
 				}
 				if en.Name != e.key {
-					t.Errorf("expected %s got %s", e.key, en.Name)
+					ts.Errorf("expected %s got %s", e.key, en.Name)
 				}
 			}
 		}
@@ -130,7 +130,7 @@ func TestDevice(t *testing.T) {
 				ts.Error(err)
 			}
 			if len(envs) != len(env) {
-				t.Errorf("expected %d got %d", len(env), len(envs))
+				ts.Errorf("expected %d got %d", len(env), len(envs))
 			}
 		}
 	})
@@ -141,6 +141,18 @@ func TestDevice(t *testing.T) {
 		}
 		for _, e := range envs {
 			err := EnvDevUpdate(ctx, e.ID, e.Name)
+			if err != nil {
+				ts.Error(err)
+			}
+		}
+	})
+	t.Run("EnvDelete", func(ts *testing.T) {
+		envs, err := EnvDevGetAll(ctx, devices[0].dev.ID)
+		if err != nil {
+			ts.Fatal(err)
+		}
+		for _, e := range envs {
+			err := EnvDevDelete(ctx, e.ID)
 			if err != nil {
 				ts.Error(err)
 			}

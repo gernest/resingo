@@ -49,7 +49,7 @@ This is the laundry list of things you can do.
   - [x] Get all device environment variables
   - [x] Create a device environment variable
   - [x] Update device environment variable
-  - [ ] Remove device environment variable
+  - [x] Remove/Delete device environment variable
  - Application
   - [ ] Get all application environment variables
   - [ ] Create application environment variable

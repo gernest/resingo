@@ -90,3 +90,18 @@ func EnvDevUpdate(ctx *Context, id int64, value string) error {
 	}
 	return nil
 }
+
+//EnvDevDelete deketes device environment variable
+func EnvDevDelete(ctx *Context, id int64) error {
+	h := authHeader(ctx.Config.AuthToken)
+	s := fmt.Sprintf("device_environment_variable(%d)", id)
+	uri := ctx.Config.APIEndpoint(s)
+	b, err := doJSON(ctx, "DELETE", uri, h, nil, nil)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
+}
