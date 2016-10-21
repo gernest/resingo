@@ -134,6 +134,18 @@ func TestDevice(t *testing.T) {
 			}
 		}
 	})
+	t.Run("EnvUpdate", func(ts *testing.T) {
+		envs, err := EnvDevGetAll(ctx, devices[0].dev.ID)
+		if err != nil {
+			ts.Fatal(err)
+		}
+		for _, e := range envs {
+			err := EnvDevUpdate(ctx, e.ID, e.Name)
+			if err != nil {
+				ts.Error(err)
+			}
+		}
+	})
 }
 
 func testDevGetAll(ctx *Context, t *testing.T, appName string, expect int) {

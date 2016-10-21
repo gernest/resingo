@@ -2,6 +2,7 @@ package resingo
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 )
@@ -66,4 +67,26 @@ func EnvDevGetAll(ctx *Context, id int64) ([]*Env, error) {
 		return nil, err
 	}
 	return res.D, nil
+}
+
+//EnvDevUpdate updates environment variable for device. The id is for  the
+//environmant variable.
+func EnvDevUpdate(ctx *Context, id int64, value string) error {
+	h := authHeader(ctx.Config.AuthToken)
+	s := fmt.Sprintf("device_environment_variable(%d)", id)
+	uri := ctx.Config.APIEndpoint(s)
+	data := make(map[string]interface{})
+	data["value"] = value
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "PATCH", uri, h, nil, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
 }
