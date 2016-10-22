@@ -1,4 +1,4 @@
-# resingo [![GoDoc](https://godoc.org/github.com/gernest/resingo?status.svg)](https://godoc.org/github.com/gernest/resingo) [![Go Report Card](https://goreportcard.com/badge/github.com/gernest/resingo)](https://goreportcard.com/report/github.com/gernest/resingo)
+# resingo [![GoDoc](https://godoc.org/github.com/gernest/resingo?status.svg)](https://godoc.org/github.com/gernest/resingo) [![Go Report Card](https://goreportcard.com/badge/github.com/gernest/resingo)](https://goreportcard.com/report/github.com/gernest/resingo)[![Build Status](https://travis-ci.org/gernest/resingo.svg?branch=master)](https://travis-ci.org/gernest/resingo)[![Coverage Status](https://coveralls.io/repos/github/gernest/resingo/badge.svg?branch=master)](https://coveralls.io/github/gernest/resingo?branch=master)
 
 The unofficial golang sdk for resin.io
 
