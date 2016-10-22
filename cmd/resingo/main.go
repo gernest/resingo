@@ -141,7 +141,7 @@ func getCOntext() (*resingo.Context, error) {
 	if err != nil {
 		return nil, err
 	}
-	if resingo.ValidToken(tk) {
+	if !resingo.ValidToken(tk) {
 		return nil, errors.New("not logged in " + tk)
 	}
 	return &resingo.Context{
