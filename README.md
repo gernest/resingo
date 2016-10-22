@@ -57,10 +57,10 @@ This is the laundry list of things you can do.
   - [x] Remove application environment variable
 
 - Keys
- - [ ] Get all ssh keys
- - [ ] Get a dingle ssh key
- - [ ] Remove ssh key
- - [ ] Create ssh key
+ - [x] Get all ssh keys
+ - [x] Get a dingle ssh key
+ - [x] Remove ssh key
+ - [x] Create ssh key
 
 - Os
   - [ ] Download Os Image
