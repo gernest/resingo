@@ -51,10 +51,10 @@ This is the laundry list of things you can do.
   - [x] Update device environment variable
   - [x] Remove/Delete device environment variable
  - Application
-  - [ ] Get all application environment variables
-  - [ ] Create application environment variable
-  - [ ] Update application environment variable
-  - [ ] Remove application environment variable
+  - [x] Get all application environment variables
+  - [x] Create application environment variable
+  - [x] Update application environment variable
+  - [x] Remove application environment variable
 
 - Keys
  - [ ] Get all ssh keys

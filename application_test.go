@@ -63,6 +63,60 @@ func TestApplication(t *testing.T) {
 			testAppAPIKey(ctx, ts, a.name)
 		}
 	})
+	env := []struct {
+		key, value string
+	}{
+		{"ToALL", "Programmers"},
+		{"Around", "TheWorld"},
+	}
+	t.Run("CreateEnv", func(ts *testing.T) {
+		for _, v := range applications {
+			for _, e := range env {
+				en, err := EnvAppCreate(ctx, v.app.ID, e.key, e.value)
+				if err != nil {
+					ts.Error(err)
+				}
+				if en.Name != e.key {
+					ts.Errorf("expected %s got %s", e.key, en.Name)
+				}
+			}
+		}
+	})
+	t.Run("EnvGetAll", func(ts *testing.T) {
+		for _, v := range applications {
+			envs, err := EnvAppGetAll(ctx, v.app.ID)
+			if err != nil {
+				ts.Error(err)
+			}
+			if len(envs) != len(env) {
+				ts.Errorf("expected %d got %d", len(env), len(envs))
+			}
+		}
+	})
+	t.Run("EnvUpdate", func(ts *testing.T) {
+		envs, err := EnvAppGetAll(ctx, applications[0].app.ID)
+		if err != nil {
+			ts.Fatal(err)
+		}
+		for _, e := range envs {
+			err := EnvAppUpdate(ctx, e.ID, e.Name)
+			if err != nil {
+				ts.Error(err)
+			}
+		}
+	})
+	t.Run("EnvDelete", func(ts *testing.T) {
+		envs, err := EnvAppGetAll(ctx, applications[0].app.ID)
+		if err != nil {
+			ts.Fatal(err)
+		}
+		for _, e := range envs {
+			err := EnvAppDelete(ctx, e.ID)
+			if err != nil {
+				ts.Error(err)
+			}
+		}
+	})
 }
 
 func testAppGetAll(ctx *Context, t *testing.T) {
