@@ -172,7 +172,7 @@ Running tests will require a valid resin account . You need to set the following
 environment variables before running the `make` command.
 
 ```bash
-export RESINTEST_EMAI=
+export RESINTEST_EMAIL=
 export RESINTEST_PASSWORD=
 export RESINTEST_USERNAME=
 export RESINTEST_REALDEVICE_UUID=
