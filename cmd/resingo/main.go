@@ -58,6 +58,25 @@ func main() {
 			},
 		},
 		{
+			Name:   "up",
+			Usage:  "uses docker-compose.yml to start your services",
+			Action: compose,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "projectName",
+					Usage: "application name",
+				},
+				cli.StringFlag{
+					Name:  "host",
+					Usage: "url to the device",
+				},
+				cli.StringFlag{
+					Name:  "ip",
+					Usage: "url to the device",
+				},
+			},
+		},
+		{
 			Name:   "devices",
 			Usage:  "list all devices",
 			Action: devices,
@@ -148,4 +167,14 @@ func getCOntext() (*resingo.Context, error) {
 		Client: &http.Client{},
 		Config: &resingo.Config{APIKey: tk, ResinEndpoint: ResinURL},
 	}, nil
+}
+
+func compose(ctx *cli.Context) error {
+	cfg := &resingo.Compose{
+		Projectname:  ctx.String("projectName"),
+		Host:         ctx.String("host"),
+		ComposeFiles: ctx.Args(),
+		DeviceIP:     ctx.String("ip"),
+	}
+	return resingo.Up(cfg)
 }

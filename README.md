@@ -204,6 +204,10 @@ Get the list of all your devices
  resingo devices
  ```
 
+Build and start services using docker-compose.yml in your resinOS
+ ```bash
+resingo  up --host http://resin.local /path/to/docker-compose.yml
+ ```
 
 # Author
 
