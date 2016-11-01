@@ -26,15 +26,7 @@ const (
 )
 
 const (
-	pineEndpoint           = "https://api.resin.io/ewa"
-	apiEndpoint            = "https://api.resin.io"
-	tokenRefreshInterval   = 3600000
-	imageCacheTime         = 86400000
-	applicationEndpoint    = "/application"
-	deviceEndpoint         = "/device"
-	keysEndpoint           = "/user__has__public_key"
-	applicationEnvEndpoint = "/environment_variable"
-	deviceEnvEndpoint      = "/device_environment_variable"
+	apiEndpoint = "https://api.resin.io"
 )
 
 //APIVersion is the version of resin API
