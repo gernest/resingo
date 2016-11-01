@@ -31,4 +31,8 @@ func TestDeviceType(t *testing.T) {
 			t.Errorf("expetcted %s got %v", v.expect, v.typ)
 		}
 	}
+	unkown := DeviceType(100)
+	if unkown.String() != "Unknown" {
+		t.Errorf("expected Unknown got %v", unkown)
+	}
 }

@@ -61,7 +61,7 @@ func (d DeviceType) String() string {
 	case ZyncXz702:
 		return "zynq-xz702"
 	}
-	return "Unknown device"
+	return "Unknown"
 }
 
 //Repository is a resin remote repository
