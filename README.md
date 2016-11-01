@@ -184,27 +184,6 @@ script will automatically source it for you.
 
 All contributions are welcome.
 
-# Demo
-To demonstrate how you can use this, I have reimplemented the resin-cli. For now
-not all of the features are there( not even close).
-
-Go get the application like this
-
- ```bash
- go get github.com/gernest/resingo/cmd/resingo
- ```
-
- Log in
- ```bash
- resingo login --username <your username> --password <your password>
- ```
-
-Get the list of all your devices
- ```bash
- resingo devices
- ```
-
-
 # Author
 
 twitter [@gernesti](https://twitter.com/gernesti)
