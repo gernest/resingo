@@ -125,11 +125,7 @@ func (c *Config) APIEndpoint(endpoint string) string {
 // This method ecodes the token. A token that can't be doced is bad token. Any
 // token that has expired is also a bad token.
 func (c *Config) IsValidToken(tok string) bool {
-	tk, err := ParseToken(tok)
-	if err != nil {
-		return false
-	}
-	return tk.StandardClaims.ExpiresAt > time.Now().Unix()
+	return ValidToken(tok)
 }
 
 //ValidToken return true if tok is avalid token
