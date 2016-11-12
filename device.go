@@ -50,6 +50,7 @@ type Device struct {
 	Location              string    `json:"location"`
 	Longitude             string    `json:"longitude"`
 	Latitude              string    `json:"latitude"`
+	LogsChannel           string    `json:"logs_channel"`
 }
 
 //DevGetAll returns all devices that belong to the user who authorized the
