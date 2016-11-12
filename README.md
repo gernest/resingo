@@ -67,6 +67,7 @@ This is the laundry list of things you can do.
 
 - Config
  - [x] Get all configurations
+
  # Introduction
 
  ## Installation
