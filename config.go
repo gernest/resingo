@@ -15,7 +15,7 @@ type ResinConfig struct {
 	AdminURL           string   `json:"adminUrl"`
 	DebugEnabled       bool     `json:"debugEnabled"`
 	PubNub             struct {
-		PubKey string `kson:"public_key"`
+		PubKey string `json:"publish_key"`
 		SubKey string `json:"subscribe_key"`
 	} `json:"pubnub"`
 	GoogleAnalytics struct {
