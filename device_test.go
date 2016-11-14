@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestDevice(t *testing.T) {
@@ -261,4 +262,37 @@ func testDevDisableURL(ctx *Context, t *testing.T, uuid string) {
 	if dev.WebAccessible {
 		t.Error("the device should not be web accessible")
 	}
+}
+
+func TestDump(t *testing.T) {
+	config := &Config{
+		Username:      ENV.Username,
+		Password:      ENV.Password,
+		ResinEndpoint: apiEndpoint,
+	}
+	client := &http.Client{}
+	ctx := &Context{
+		Client: client,
+		Config: config,
+	}
+	err := Login(ctx, Credentials)
+	if err != nil {
+		t.Fatal(err)
+	}
+	//d, _ := DevGetByUUID(ctx, "b594dafa5fd01be0a029a44e64e657d58c0f4d31652c956712b687e3f331a6")
+	//fmt.Println(d.LogsChannel)
+	uuid := "b594dafa5fd01be0a029a44e64e657d58c0f4d31652c956712b687e3f331a6"
+	lg, err := NewLogs(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	go func() {
+		err = lg.Log(uuid, os.Stdout)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}()
+	time.Sleep(30 * time.Second)
+	lg.Close()
+
 }

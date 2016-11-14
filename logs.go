@@ -10,6 +10,9 @@ import (
 )
 
 //Logs  streams resin device logs
+//
+// Resin uses pubnub service for logs. Unfortunate the API for pubnub sucks big
+// time. This Limits the API for this struct too.
 type Logs struct {
 	nub     *messaging.Pubnub
 	channel string
@@ -17,7 +20,7 @@ type Logs struct {
 	stop    chan struct{}
 }
 
-//NewLogs returns a new Logs instace which is initialized to support srteaming
+//NewLogs returns a new Logs instace which is initialized to support streaming
 //logs from pubnub.
 func NewLogs(ctx *Context) (*Logs, error) {
 	cfg, err := ConfigGetAll(ctx)
@@ -49,7 +52,10 @@ func (l *Logs) Subscribe(uuid string) (
 
 }
 
-//GetChannel returns the device logs channel for the device with given uuid.
+//GetChannel returns the device logs channel for the device with given uuid..
+//The value is not cached, so this is stateless. This allows to use the same
+//Lofs instance to syvscribe to multiple devices in different goroutines without
+//race conditions.
 func (l *Logs) GetChannel(uuid string) (string, error) {
 	logsChan := uuid
 	dev, err := DevGetByUUID(l.ctx, uuid)
@@ -81,7 +87,7 @@ stop:
 			err = errors.New(string(errrcv))
 			break stop
 		case <-l.stop:
-			fmt.Println("stopping streaming logs")
+			fmt.Println("resingo: stopping streaming logs")
 			break stop
 		}
 	}
@@ -112,7 +118,7 @@ func (l *Logs) write(out io.Writer, src []byte) error {
 			if err != nil {
 				return err
 			}
-			fmt.Fprintf(out, "[ ] %s \n", m)
+			fmt.Fprintf(out, " %s \n", m)
 		}
 	}
 	return nil
