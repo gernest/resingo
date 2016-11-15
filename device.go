@@ -366,3 +366,24 @@ func DevMove(ctx *Context, id int64, appID int64) error {
 	}
 	return nil
 }
+
+// DevBlink identifies the device by blinking.
+func DevBlink(ctx *Context, uuid string) error {
+	h := authHeader(ctx.Config.AuthToken)
+	//uri := ctx.Config.APIEndpoint("blink")
+	uri := apiEndpoint + "/" + "blink"
+	data := make(map[string]interface{})
+	data["uuid"] = uuid
+	body, err := marhsalReader(data)
+	if err != nil {
+		return err
+	}
+	b, err := doJSON(ctx, "POST", uri, h, nil, body)
+	if err != nil {
+		return err
+	}
+	if string(b) != "OK" {
+		return errors.New("bad response")
+	}
+	return nil
+}

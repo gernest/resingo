@@ -43,6 +43,7 @@ This is the laundry list of things you can do.
  - [x] Disable device url
  - [x] Move device
  - [x] Check device status
+ - [x] Identify device by blinkig
 
 - Environment
  - Device
