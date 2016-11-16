@@ -106,7 +106,7 @@ func do(ctx *Context, method, uri string, header http.Header,
 
 func checkStatus(status int) bool {
 	switch status {
-	case http.StatusOK, http.StatusCreated:
+	case http.StatusOK, http.StatusCreated, http.StatusAccepted:
 		return true
 	}
 	return false
