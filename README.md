@@ -34,7 +34,6 @@ This is the laundry list of things you can do.
  - [x] Check if the device is online or not
  - [x] Get local IP address of the device
  - [x] Remove/Delete device
- - [ ] Identify device
  - [x] Rename device
  - [x] Note a device
  - [x] Generate device UUID
@@ -73,8 +72,8 @@ This is the laundry list of things you can do.
  - [x] Subscribe to device logs
  - [ ] Retrieve historical logs
 
- - Supervisor
-  - [x] Reboot
+- Supervisor
+ - [x] Reboot
 
  # Introduction
 
