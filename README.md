@@ -73,6 +73,9 @@ This is the laundry list of things you can do.
  - [x] Subscribe to device logs
  - [ ] Retrieve historical logs
 
+ - Supervisor
+  - [x] Reboot
+
  # Introduction
 
  ## Installation
