@@ -2,6 +2,10 @@
 
 The unofficial golang sdk for resin.io
 
+**MAINTAINER WANTED**
+I no longer work with resin devices, so I don't have time to put into this. If
+you are interested in maintaining this please let me know! Thanks.
+
 ## what is resin and what is resingo?
 [Resin](https://resin.io/) is a service that brings the benefits of linux
 containers to IoT. It enables iterative development, deployment and management
