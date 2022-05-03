@@ -11,7 +11,6 @@ type ResinConfig struct {
 	KeenReadKey        string   `json:"keenReadKey"`
 	DeviceURLBase      string   `json:"deviceUrlsBase"`
 	GitServerURL       string   `json:"gitServerUrl"`
-	ImageMakerURL      string   `json:"imgMakerUrl"`
 	AdminURL           string   `json:"adminUrl"`
 	DebugEnabled       bool     `json:"debugEnabled"`
 	PubNub             struct {
